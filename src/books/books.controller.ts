@@ -10,19 +10,37 @@ import {
   UseGuards,
 } from '@nestjs/common';
 import { Request } from 'express';
+import { AuthGuard } from '@nestjs/passport';
+import { 
+  ApiOperation,
+  ApiResponse,
+  ApiTags,
+  ApiBearerAuth,
+} from '@nestjs/swagger';
 
 import { BooksService } from './books.service';
-import { Book } from './book.class';
+import { Book } from './book.entity';
 import { BookDto } from './book.dto';
 
-import { AuthGuard } from '@nestjs/passport';
-
+@ApiTags('book')
+@ApiBearerAuth('access-token')
 @Controller('books')
 @UseGuards(AuthGuard('jwt'))
 export class BooksController {
   constructor(private bookSerice: BooksService) {}
 
+  /** 
+   *
+   * @returns {Book[]} Devuelve una lista de libros
+   * @param {Request} request Lista de parámetros para filtrar
+   */
   @Get()
+  @ApiOperation({ summary: 'Obtener lista de libros' })
+  @ApiResponse({ 
+    status: 201,
+    description: 'Lista de libros',
+    type: Book, 
+  })
   findAll(@Req() request: Request): Promise<Book[]> {
     return this.bookSerice.findAll(request.query);
   }
