@@ -7,6 +7,7 @@ import {
   Body,
   Delete,
   Put,
+  UseGuards,
 } from '@nestjs/common';
 import { Request } from 'express';
 
@@ -14,7 +15,10 @@ import { BooksService } from './books.service';
 import { Book } from './book.class';
 import { BookDto } from './book.dto';
 
+import { AuthGuard } from '@nestjs/passport';
+
 @Controller('books')
+@UseGuards(AuthGuard('jwt'))
 export class BooksController {
   constructor(private bookSerice: BooksService) {}
 
